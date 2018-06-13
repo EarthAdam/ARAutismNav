@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AR Core Navigator", "Assembly-CSharp.csproj", "{82027723-50AA-A5BF-9450-2334EA6F3B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AR Core Navigator", "Assembly-CSharp-Editor.csproj", "{91FD4596-03DE-0B47-2986-F6FB0E23DC95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82027723-50AA-A5BF-9450-2334EA6F3B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82027723-50AA-A5BF-9450-2334EA6F3B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82027723-50AA-A5BF-9450-2334EA6F3B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82027723-50AA-A5BF-9450-2334EA6F3B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91FD4596-03DE-0B47-2986-F6FB0E23DC95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91FD4596-03DE-0B47-2986-F6FB0E23DC95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91FD4596-03DE-0B47-2986-F6FB0E23DC95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91FD4596-03DE-0B47-2986-F6FB0E23DC95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
