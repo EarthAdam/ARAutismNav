@@ -55,17 +55,44 @@ public class PlayerMoveController : MonoBehaviour {
 
 	void Update()
 	{
-		// move
-		_rigidbody.MovePosition(transform.position + (transform.forward * leftController.GetTouchPosition.y * Time.deltaTime * speedMovements) +
-			(transform.right * leftController.GetTouchPosition.x * Time.deltaTime * speedMovements) );
+		string[] names = Input.GetJoystickNames();
+		for (int x = 0; x < names.Length; x++)
+         {
+			print(names[x].Length);
+			/*
+			if (names[x].Length == 19)
+			{
+				print("PS4 CONTROLLER IS CONNECTED");
+			}
+			*/
+			if (names[x].Length == 33)
+			{
+			print("XBOX ONE CONTROLS ACTIVE");
+			float moveX = Input.GetAxis ("Xbox U/D J1");
+			float moveY = Input.GetAxis ("Xbox L/R J1");
+			float rotY = Input.GetAxis ("Xbox U/D J2");
+			float rotx = Input.GetAxis ("Xbox L/R J2");
+			float triggers = Input.GetAxis("Xbox Trigger");
 
-		if(continuousRightController)
-		{
-			Quaternion rot = Quaternion.Euler(transform.localEulerAngles.x - rightController.GetTouchPosition.y * Time.deltaTime * speedContinuousLook,
-				transform.localEulerAngles.y + rightController.GetTouchPosition.x * Time.deltaTime * speedContinuousLook,
-				0f);
+			Vector3 movement = new Vector3 (moveX, triggers, moveY);
+			gameObject.GetComponent<Rigidbody>().velocity = movement * 100;
+			transform.Rotate(rotY, rotx, 0);
+			}
+			else
+			{
+				print("KEYBOARD CONTROLS ACTIVE");
+				_rigidbody.MovePosition(transform.position + (transform.forward * leftController.GetTouchPosition.y * Time.deltaTime * speedMovements) +
+					(transform.right * leftController.GetTouchPosition.x * Time.deltaTime * speedMovements) );
 
-			_rigidbody.MoveRotation(rot);
+				if(continuousRightController)
+				{
+					Quaternion rot = Quaternion.Euler(transform.localEulerAngles.x - rightController.GetTouchPosition.y * Time.deltaTime * speedContinuousLook,
+						transform.localEulerAngles.y + rightController.GetTouchPosition.x * Time.deltaTime * speedContinuousLook,
+						0f);
+
+					_rigidbody.MoveRotation(rot);
+				}
+         	}
 
 		}
 	}
