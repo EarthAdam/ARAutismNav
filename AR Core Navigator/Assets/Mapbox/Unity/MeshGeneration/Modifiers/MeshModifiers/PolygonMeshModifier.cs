@@ -11,7 +11,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 	/// Currently uses Triangle.Net for triangulation, which occasionally adds extra vertices to maintain a good triangulation so output vertex list might not be exactly same as the original vertex list.
 	/// </summary>
 	[CreateAssetMenu(menuName = "Mapbox/Modifiers/Polygon Mesh Modifier")]
-	public class PolygonMeshModifier : MeshModifier
+	public class PolygonMeshModifier : MeshGenerationBase
 	{
 		public override ModifierType Type { get { return ModifierType.Preprocess; } }
 
@@ -33,6 +33,17 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
 		public override void Run(VectorFeatureUnity feature, MeshData md, UnityTile tile = null)
 		{
+			if(Criteria!=null && Criteria.Count > 0)
+			{
+				foreach(var criterion in Criteria)
+				{
+					if(criterion.ShouldReplaceFeature(feature))
+					{
+						return;
+					}
+				}
+			}
+
 			_secondCounter = feature.Points.Count;
 			var subset = new List<List<Vector3>>(_secondCounter);
 			Data flatData = null;
@@ -82,6 +93,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 					md.Edges.Add(vertCount + ((j+ 1) % c2));
 					md.Edges.Add(vertCount + j);
 					md.Vertices.Add(sub[j]);
+					md.Tangents.Add(Constants.Math.Vector3Forward);
 					md.Normals.Add(Constants.Math.Vector3Up);
 				}
 

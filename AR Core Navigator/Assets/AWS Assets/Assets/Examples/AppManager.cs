@@ -10,25 +10,28 @@ namespace AWSSDK.Examples
         public string S3BucketName;
         public string fileNameOnBucket;
         private string pathFileUpload;
-        public Button buttonUploadFileBucket;
         public Text resultTextOperation;
         public InputField UploadInputField;
 
         void Start()
         {
-            /* 
-            StreamWriter writer = new StreamWriter(Application.persistentDataPath+@"/"+System.DateTime.Now.ToString("yy.MM.dd")+".txt", true);
-            fileNameOnBucket = System.DateTime.Now.ToString("yy.MM.dd")+".txt";
+            
+            StreamWriter writer = new StreamWriter(Application.persistentDataPath+@"/"+System.DateTime.Now.ToString("yy.MM.dd")+".json", true);
+            //fileNameOnBucket = System.DateTime.Now.ToString("yy.MM.dd")+".json";
             writer.WriteLine("goofy");
             writer.Close();
-            */
-            pathFileUpload = (Application.persistentDataPath+@"/"+System.DateTime.Now.ToString("yy.MM.dd")+".txt");
+            StreamWriter writer2 = new StreamWriter(Application.persistentDataPath+@"/"+System.DateTime.Now.ToString("yy.MM.dd")+".csv", true);
+            //fileNameOnBucket = System.DateTime.Now.ToString("yy.MM.dd")+".csv";
+            writer2.WriteLine("goofy");
+            writer2.Close();
+            
+            //pathFileUpload = (Application.persistentDataPath+@"/"+System.DateTime.Now.ToString("yy.MM.dd")+".json");
             S3Manager.Instance.OnResultGetObject += GetObjectBucket;
         }
 
         void Update()
         {
-            fileNameOnBucket = UploadInputField.text+".txt";    
+            fileNameOnBucket = UploadInputField.text;    
         }
         public void ListObjectsBucket()
         {
@@ -55,7 +58,7 @@ namespace AWSSDK.Examples
 
         public void GetObjectBucket(GetObjectResponse resultFinal = null, string errorFinal = null)
         {
-            resultTextOperation.text = string.Format("fetching {0} from bucket {1}", System.DateTime.Now.ToString("yy.MM.dd")+".txt", S3BucketName);
+            resultTextOperation.text = string.Format("fetching {0} from bucket {1}", fileNameOnBucket, S3BucketName);
             
             if(errorFinal != null)
             {
@@ -66,7 +69,7 @@ namespace AWSSDK.Examples
             }
             
 
-            S3Manager.Instance.GetObjectBucket(S3BucketName, System.DateTime.Now.ToString("yy.MM.dd")+".txt", (result, error) =>
+            S3Manager.Instance.GetObjectBucket(S3BucketName, fileNameOnBucket, (result, error) =>
             {
                 if (string.IsNullOrEmpty(error))
                 {
@@ -87,7 +90,7 @@ namespace AWSSDK.Examples
             resultTextOperation.text = "Retrieving the file";
             resultTextOperation.text += "\nCreating request object";
             resultTextOperation.text += "\nMaking HTTP post call";
-            string pathFile = Application.persistentDataPath+@"/"+UploadInputField.text +".txt";
+            string pathFile = Application.persistentDataPath+@"/"+UploadInputField.text;
 
             S3Manager.Instance.UploadObjectForBucket(pathFile, S3BucketName, fileNameOnBucket, (result, error) =>
             {

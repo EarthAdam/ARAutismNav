@@ -5,11 +5,13 @@
 	using System.Collections.Generic;
 	using System;
 	using System.Linq;
+	using Mapbox.Unity.Map;
 
 	public class ScriptableCreatorWindow : EditorWindow
 	{
 		Type _type;
 		SerializedProperty _finalize;
+		SerializedProperty _container;
 		const float width = 620f;
 		const float height = 600f;
 		List<ScriptableObject> _assets;
@@ -24,24 +26,25 @@
 
 		void OnEnable()
 		{
-			EditorApplication.playmodeStateChanged += OnModeChanged;
+			EditorApplication.playModeStateChanged += OnModeChanged;
 		}
 
 		void OnDisable()
 		{
-			EditorApplication.playmodeStateChanged -= OnModeChanged;
+			EditorApplication.playModeStateChanged -= OnModeChanged;
 		}
 
-		void OnModeChanged()
+		void OnModeChanged(PlayModeStateChange state)
 		{
 			Close();
 		}
 
-		public static void Open(Type type, SerializedProperty p, int index = -1, Action<UnityEngine.Object> act = null)
+		public static void Open(Type type, SerializedProperty p, int index = -1, Action<UnityEngine.Object> act = null, SerializedProperty containerProperty = null)
 		{
 			var window = GetWindow<ScriptableCreatorWindow>(true, "Select a module");
 			window._type = type;
 			window._finalize = p;
+			window._container = containerProperty;
 			window.position = new Rect(500, 200, width, height);
 			window._act = act;
 			if (index > -1)
@@ -72,7 +75,7 @@
 				}
 				_assets = _assets.OrderBy(x => x.GetType().Name).ThenBy(x => x.name).ToList();
 			}
-			
+
 			var st = new GUIStyle();
 			st.padding = new RectOffset(15, 15, 15, 15);
 			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, st);
@@ -83,7 +86,7 @@
 					continue;
 				GUILayout.BeginHorizontal();
 
-				var b = Header(string.Format("{0,-40} - {1, -15}",  asset.GetType().Name , asset.name), i == activeIndex);
+				var b = Header(string.Format("{0,-40} - {1, -15}", asset.GetType().Name, asset.name), i == activeIndex);
 
 				if (b)
 					activeIndex = i;
@@ -108,6 +111,12 @@
 						}
 					}
 
+					MapboxDataProperty mapboxDataProperty = (MapboxDataProperty)EditorHelper.GetTargetObjectOfProperty(_container);
+					if (mapboxDataProperty != null)
+					{
+						mapboxDataProperty.HasChanged = true;
+					}
+
 					this.Close();
 				}
 
@@ -127,16 +136,6 @@
 				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndScrollView();
-
-			//if (GUILayout.Button(new GUIContent("Create New Factory")))
-			//{
-			//	//var fac = CreateInstance<Unity.MeshGeneration.Factories.TerrainFactory>();
-			//	var fac = CreateAsset<Unity.MeshGeneration.Factories.TerrainFactory>();
-			//	_finalize.arraySize++;
-			//	_finalize.GetArrayElementAtIndex(_finalize.arraySize - 1).objectReferenceValue = fac;
-			//	_finalize.serializedObject.ApplyModifiedProperties();
-			//	this.Close();
-			//}
 		}
 
 		public static T CreateAsset<T>() where T : ScriptableObject

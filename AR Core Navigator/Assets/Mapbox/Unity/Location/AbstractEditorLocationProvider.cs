@@ -17,7 +17,7 @@
 		[SerializeField]
 		bool _sendEvent;
 
-		WaitForSeconds _wait;
+		WaitForSeconds _wait = new WaitForSeconds(0);
 
 #if UNITY_EDITOR
 		protected virtual void Awake()
@@ -43,7 +43,16 @@
 			}
 		}
 
-		void OnValidate()
+
+		// Added to support TouchCamera script. 
+		public void SendLocationEvent()
+		{
+			SetLocation();
+			SendLocation(_currentLocation);
+		}
+
+
+		protected virtual void OnValidate()
 		{
 			if (_sendEvent)
 			{

@@ -5,17 +5,16 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 	using Mapbox.Unity.MeshGeneration.Components;
 	using Mapbox.Unity.MeshGeneration.Interfaces;
 	using System.Collections.Generic;
+	using Mapbox.Unity.Map;
+	using System;
 
 	[CreateAssetMenu(menuName = "Mapbox/Modifiers/Prefab Modifier")]
 	public class PrefabModifier : GameObjectModifier
 	{
-		[SerializeField]
-		private GameObject _prefab;
-
-		[SerializeField]
-		private bool _scaleDownWithWorld = false;
-
 		private Dictionary<GameObject, GameObject> _objects;
+		[SerializeField]
+		private SpawnPrefabOptions _options;
+		private List<GameObject> _prefabList = new List<GameObject>();
 
 		public override void Initialize()
 		{
@@ -25,54 +24,93 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 			}
 		}
 
+		public override void SetProperties(ModifierProperties properties)
+		{
+			_options = (SpawnPrefabOptions)properties;
+			_options.PropertyHasChanged += UpdateModifier;
+		}
+
 		public override void Run(VectorEntity ve, UnityTile tile)
 		{
-			int selpos = ve.Feature.Points[0].Count / 2;
-			var met = ve.Feature.Points[0][selpos];
+			if (_options.prefab == null)
+			{
+				return;
+			}
 
-			IFeaturePropertySettable settable = null;
-			GameObject go;
+			GameObject go = null;
 
 			if (_objects.ContainsKey(ve.GameObject))
 			{
 				go = _objects[ve.GameObject];
-				settable = go.GetComponent<IFeaturePropertySettable>();
-				if (settable != null)
+			}
+			else
+			{
+				go = Instantiate(_options.prefab);
+				_prefabList.Add(go);
+				_objects.Add(ve.GameObject, go);
+				go.transform.SetParent(ve.GameObject.transform, false);
+			}
+
+			PositionScaleRectTransform(ve, tile, go);
+
+			if (_options.AllPrefabsInstatiated != null)
+			{
+				_options.AllPrefabsInstatiated(_prefabList);
+			}
+		}
+
+		public void PositionScaleRectTransform(VectorEntity ve, UnityTile tile, GameObject go)
+		{
+			RectTransform goRectTransform;
+			IFeaturePropertySettable settable = null;
+			var centroidVector = new Vector3();
+			foreach (var point in ve.Feature.Points[0])
+			{
+				centroidVector += point;
+			}
+			centroidVector = centroidVector / ve.Feature.Points[0].Count;
+
+			go.name = ve.Feature.Data.Id.ToString();
+
+			goRectTransform = go.GetComponent<RectTransform>();
+			if (goRectTransform == null)
+			{
+				go.transform.localPosition = centroidVector;
+				if (_options.scaleDownWithWorld)
 				{
-					go = (settable as MonoBehaviour).gameObject;
-					go.name = ve.Feature.Data.Id.ToString();
-					go.transform.localPosition = met;
-					go.transform.localScale = Constants.Math.Vector3One;
-					settable.Set(ve.Feature.Properties);
-					if (!_scaleDownWithWorld)
-					{
-						go.transform.localScale = Vector3.one / tile.TileScale;
-					}
-					return;
+					go.transform.localScale = _options.prefab.transform.localScale * (tile.TileScale);
 				}
 			}
 			else
 			{
-				go = Instantiate(_prefab);
-				_objects.Add(ve.GameObject, go);
+				goRectTransform.anchoredPosition3D = centroidVector;
+				if (_options.scaleDownWithWorld)
+				{
+					goRectTransform.localScale = _options.prefab.transform.localScale * (tile.TileScale);
+				}
 			}
 
-			go.name = ve.Feature.Data.Id.ToString();
-			go.transform.position = met;
-			go.transform.SetParent(ve.GameObject.transform, false);
-			go.transform.localScale = Constants.Math.Vector3One;
+			//go.transform.localScale = Constants.Math.Vector3One;
 
 			settable = go.GetComponent<IFeaturePropertySettable>();
 			if (settable != null)
 			{
 				settable.Set(ve.Feature.Properties);
 			}
+		}
 
-			if (!_scaleDownWithWorld)
+		public override void ClearCaches()
+		{
+			base.ClearCaches();
+			foreach (var gameObject in _objects.Values)
 			{
-				go.transform.localScale = Vector3.one / tile.TileScale;
+				Destroy(gameObject);
 			}
 
+			foreach (var gameObject in _prefabList)
+			{
+				Destroy(gameObject);
+			}
 		}
 	}
 }

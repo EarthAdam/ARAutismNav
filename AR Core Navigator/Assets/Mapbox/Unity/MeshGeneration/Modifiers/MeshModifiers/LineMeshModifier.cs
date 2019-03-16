@@ -1,36 +1,41 @@
+using Mapbox.Unity.Map;
+
 namespace Mapbox.Unity.MeshGeneration.Modifiers
 {
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Mapbox.Unity.MeshGeneration.Data;
-    
-    /// <summary>
-    /// Line Mesh Modifier creates line polygons from a list of vertices. It offsets the original vertices to both sides using Width parameter and triangulates them manually.
-    /// It also creates tiled UV mapping using the line length.
-    /// MergeStartEnd parameter connects both edges of the line segment and creates a closed loop which is useful for some cases like pavements around a building block.
-    /// </summary>
-    [CreateAssetMenu(menuName = "Mapbox/Modifiers/Line Mesh Modifier")]
-    public class LineMeshModifier : MeshModifier
-    {
-        [SerializeField]
-        public float Width;
-		private float _scaledWidth;
-        public override ModifierType Type { get { return ModifierType.Preprocess; } }
+	using System.Collections.Generic;
+	using UnityEngine;
+	using Mapbox.Unity.MeshGeneration.Data;
 
-		private void OnEnable()
+	/// <summary>
+	/// Line Mesh Modifier creates line polygons from a list of vertices. It offsets the original vertices to both sides using Width parameter and triangulates them manually.
+	/// It also creates tiled UV mapping using the line length.
+	/// MergeStartEnd parameter connects both edges of the line segment and creates a closed loop which is useful for some cases like pavements around a building block.
+	/// </summary>
+	[CreateAssetMenu(menuName = "Mapbox/Modifiers/Line Mesh Modifier")]
+	public class LineMeshModifier : MeshModifier
+	{
+		[SerializeField]
+		LineGeometryOptions _options;
+
+		private float _scaledWidth;
+		public override ModifierType Type { get { return ModifierType.Preprocess; } }
+
+		public override void SetProperties(ModifierProperties properties)
 		{
-			_scaledWidth = Width;
+			_options = (LineGeometryOptions)properties;
+			_options.PropertyHasChanged += UpdateModifier;
+
 		}
 
 		public override void Run(VectorFeatureUnity feature, MeshData md, float scale)
 		{
-			_scaledWidth = Width * scale;
+			_scaledWidth = _options.Width * scale;
 			ExtureLine(feature, md);
 		}
 
 		public override void Run(VectorFeatureUnity feature, MeshData md, UnityTile tile = null)
 		{
-			_scaledWidth = tile != null ? Width * tile.TileScale : Width;
+			_scaledWidth = tile != null ? _options.Width * tile.TileScale : _options.Width;
 			ExtureLine(feature, md);
 		}
 
@@ -54,6 +59,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 				var newVerticeList = new Vector3[roadSegmentCount * 2];
 				var newNorms = new Vector3[roadSegmentCount * 2];
 				var uvList = new Vector2[roadSegmentCount * 2];
+				var newTangents = new Vector4[roadSegmentCount * 2];
 				Vector3 norm;
 				var lastUv = 0f;
 				var p1 = Constants.Math.Vector3Zero;
@@ -76,7 +82,10 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 						newNorms[roadSegmentCount * 2 - 1] = Constants.Math.Vector3Up;
 						uvList[0] = new Vector2(0, 0);
 						uvList[roadSegmentCount * 2 - 1] = new Vector2(1, 0);
+						newTangents[0] = new Vector4(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z, 1).normalized;
+						newTangents[roadSegmentCount * 2 - 1] = newTangents[0];
 					}
+
 					var dist = Vector3.Distance(p1, p2);
 					lastUv += dist;
 					norm = GetNormal(p1, p2, p3) * _scaledWidth;
@@ -87,11 +96,15 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 
 					uvList[i] = new Vector2(0, lastUv);
 					uvList[2 * roadSegmentCount - 1 - i] = new Vector2(1, lastUv);
+
+					newTangents[i] = new Vector4(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z, 1).normalized;
+					newTangents[2 * roadSegmentCount - 1 - i] = newTangents[i];
 				}
 
 				md.Vertices.AddRange(newVerticeList);
 				md.Normals.AddRange(newNorms);
 				md.UV[0].AddRange(uvList);
+				md.Tangents.AddRange(newTangents);
 				var lineTri = new List<int>();
 				var n = roadSegmentCount;
 
@@ -100,7 +113,7 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 					lineTri.Add(mdVertexCount + i);
 					lineTri.Add(mdVertexCount + i + 1);
 					lineTri.Add(mdVertexCount + 2 * n - 1 - i);
-								
+
 					lineTri.Add(mdVertexCount + i + 1);
 					lineTri.Add(mdVertexCount + 2 * n - i - 2);
 					lineTri.Add(mdVertexCount + 2 * n - i - 1);
@@ -113,24 +126,24 @@ namespace Mapbox.Unity.MeshGeneration.Modifiers
 		}
 
 		private Vector3 GetNormal(Vector3 p1, Vector3 newPos, Vector3 p2)
-        {
-            if (newPos == p1 || newPos == p2)
-            {
-                var n = (p2 - p1).normalized;
-                return new Vector3(-n.z, 0, n.x);
-            }
+		{
+			if (newPos == p1 || newPos == p2)
+			{
+				var n = (p2 - p1).normalized;
+				return new Vector3(-n.z, 0, n.x);
+			}
 
-            var b = (p2 - newPos).normalized + newPos;
-            var a = (p1 - newPos).normalized + newPos;
-            var t = (b - a).normalized;
+			var b = (p2 - newPos).normalized + newPos;
+			var a = (p1 - newPos).normalized + newPos;
+			var t = (b - a).normalized;
 
-            if (t == Mapbox.Unity.Constants.Math.Vector3Zero)
-            {
-                var n = (p2 - p1).normalized;
-                return new Vector3(-n.z, 0, n.x);
-            }
+			if (t == Mapbox.Unity.Constants.Math.Vector3Zero)
+			{
+				var n = (p2 - p1).normalized;
+				return new Vector3(-n.z, 0, n.x);
+			}
 
-            return new Vector3(-t.z, 0, t.x);
-        }
-    }
+			return new Vector3(-t.z, 0, t.x);
+		}
+	}
 }

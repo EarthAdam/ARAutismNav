@@ -19,7 +19,7 @@ public class AddPoint : MonoBehaviour {
 			{
 				Point.GetComponentInChildren<TextMesh> ().text = InputText.text;
 				Point.name = InputText.text;
-				Instantiate (Point, new Vector3 (Player.transform.position.x, -5, Player.transform.position.z), new Quaternion (0, 0, 0, 0));
+				Instantiate (Point, new Vector3 (Player.transform.position.x, 5, Player.transform.position.z), new Quaternion (0, 0, 0, 0));
 			} 
 			else 
 			{

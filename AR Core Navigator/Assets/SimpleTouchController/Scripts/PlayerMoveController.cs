@@ -78,22 +78,19 @@ public class PlayerMoveController : MonoBehaviour {
 			gameObject.GetComponent<Rigidbody>().velocity = movement * 100;
 			transform.Rotate(rotY, rotx, 0);
 			}
-			else
-			{
-				print("KEYBOARD CONTROLS ACTIVE");
-				_rigidbody.MovePosition(transform.position + (transform.forward * leftController.GetTouchPosition.y * Time.deltaTime * speedMovements) +
-					(transform.right * leftController.GetTouchPosition.x * Time.deltaTime * speedMovements) );
+		}
 
-				if(continuousRightController)
-				{
-					Quaternion rot = Quaternion.Euler(transform.localEulerAngles.x - rightController.GetTouchPosition.y * Time.deltaTime * speedContinuousLook,
-						transform.localEulerAngles.y + rightController.GetTouchPosition.x * Time.deltaTime * speedContinuousLook,
-						0f);
+		_rigidbody.MovePosition(transform.position + (transform.forward * leftController.GetTouchPosition.y * Time.deltaTime * speedMovements) +
+			(transform.right * leftController.GetTouchPosition.x * Time.deltaTime * speedMovements) );
 
-					_rigidbody.MoveRotation(rot);
-				}
-         	}
+		if(continuousRightController)
+		{
+			Quaternion rot = Quaternion.Euler(transform.localEulerAngles.x - rightController.GetTouchPosition.y * Time.deltaTime * speedContinuousLook,
+				transform.localEulerAngles.y + rightController.GetTouchPosition.x * Time.deltaTime * speedContinuousLook,
+				0f);
 
+			_rigidbody.MoveRotation(rot);
+		
 		}
 	}
 

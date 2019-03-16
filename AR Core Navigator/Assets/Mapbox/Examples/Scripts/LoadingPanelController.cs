@@ -1,3 +1,4 @@
+
 namespace Mapbox.Examples
 {
 	using UnityEngine;
@@ -15,13 +16,20 @@ namespace Mapbox.Examples
 		[SerializeField]
 		AnimationCurve _curve;
 
+		AbstractMap _map;
 		void Awake()
 		{
-			var map = FindObjectOfType<AbstractMap>();
-			var visualizer = map.MapVisualizer;
+			_map = FindObjectOfType<AbstractMap>();
+			_map.OnInitialized += _map_OnInitialized;
+		}
+
+		void _map_OnInitialized()
+		{
+			var visualizer = _map.MapVisualizer;
 			_text.text = "LOADING";
 			visualizer.OnMapVisualizerStateChanged += (s) =>
 			{
+
 				if (this == null)
 					return;
 
@@ -31,9 +39,10 @@ namespace Mapbox.Examples
 				}
 				else if (s == ModuleState.Working)
 				{
+
 					// Uncommment me if you want the loading screen to show again
 					// when loading new tiles.
-					//Content.SetActive(true);
+					//_content.SetActive(true);
 				}
 			};
 		}

@@ -1,3 +1,5 @@
+using Mapbox.Unity.Map.Interfaces;
+
 namespace Mapbox.Unity.Map
 {
 	using UnityEngine;
@@ -37,11 +39,12 @@ namespace Mapbox.Unity.Map
 
 			// TODO: this is constant for all tiles--cache.
 			var scale = tile.TileScale;
+			var scaleFactor = Mathf.Pow(2, (map.InitialZoom - map.AbsoluteZoom));
 
 			var position = new Vector3(
-				(float)(rect.Center.x - map.CenterMercator.x) * scale, 
-				0, 
-				(float)(rect.Center.y - map.CenterMercator.y) * scale);
+				(float)(rect.Center.x - map.CenterMercator.x) * scale * scaleFactor,
+				0,
+				(float)(rect.Center.y - map.CenterMercator.y) * scale * scaleFactor);
 			tile.transform.localPosition = position;
 		}
 	}

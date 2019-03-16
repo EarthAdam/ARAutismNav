@@ -11,7 +11,7 @@ public class Map_Loader : MonoBehaviour {
 		if(GameObject.Find("Player(Clone)"))
 			{
 			cam.enabled = true;
-			transform.position = new Vector3(GameObject.Find("Player(Clone)").transform.position.x, 2000, GameObject.Find("Player(Clone)").transform.position.z);
+			transform.position = new Vector3(GameObject.Find("Player(Clone)").transform.position.x, 300, GameObject.Find("Player(Clone)").transform.position.z);
 			}
 	}
 }

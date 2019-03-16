@@ -11,6 +11,7 @@ namespace Mapbox.Unity.Utilities
 	using Mapbox.Utils;
 	using UnityEngine;
 	using System.Globalization;
+	using Mapbox.Unity.MeshGeneration.Data;
 
 	/// <summary>
 	/// A set of Geo and Terrain Conversion utils.
@@ -84,7 +85,7 @@ namespace Mapbox.Unity.Utilities
 		/// </summary>
 		/// <param name="lat"> The latitude. </param>
 		/// <param name="lon"> The longitude. </param>
-		/// <param name="refPoint"> A <see cref="T:UnityEngine.Vector2d"/> center point to offset resultant xy</param>
+		/// <param name="refPoint"> A <see cref="T:UnityEngine.Vector2d"/> center point to offset resultant xy, this is usually map's center mercator</param>
 		/// <param name="scale"> Scale in meters. (default scale = 1) </param>
 		/// <returns> A <see cref="T:UnityEngine.Vector2d"/> xy tile ID. </returns>
 		/// <example>
@@ -199,14 +200,65 @@ namespace Mapbox.Unity.Utilities
 		/// <param name="latitude"> The latitude. </param>
 		/// <param name="longitude"> The longitude. </param>
 		/// <param name="zoom"> Zoom level. </param>
-		/// <returns> A <see cref="T:UnityEngine.Vector2d"/> xy tile ID. </returns>
-		public static Vector2d LatitudeLongitudeToTileId(double latitude, double longitude, int zoom)
+		/// <returns> A <see cref="T:Mapbox.Map.UnwrappedTileId"/> xy tile ID. </returns>
+		public static UnwrappedTileId LatitudeLongitudeToTileId(double latitude, double longitude, int zoom)
 		{
 			var x = (int)Math.Floor((longitude + 180.0) / 360.0 * Math.Pow(2.0, zoom));
 			var y = (int)Math.Floor((1.0 - Math.Log(Math.Tan(latitude * Math.PI / 180.0)
 					+ 1.0 / Math.Cos(latitude * Math.PI / 180.0)) / Math.PI) / 2.0 * Math.Pow(2.0, zoom));
 
-			return new Vector2d(x, y);
+			return new UnwrappedTileId(zoom, x, y);
+		}
+
+
+		/// <summary>
+		/// Get coordinates for a given latitude/longitude in tile-space. Useful when comparing feature geometry to lat/lon coordinates.
+		/// </summary>
+		/// <returns>The longitude to tile position.</returns>
+		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="tileZoom">The zoom level of the tile.</param>
+		/// <param name="layerExtent">Layer extent. Optional, but recommended. Defaults to 4096, the standard for Mapbox Tiles</param>
+		public static Vector2 LatitudeLongitudeToVectorTilePosition(Vector2d coordinate, int tileZoom, ulong layerExtent = 4096)
+		{
+			var coordinateTileId = Conversions.LatitudeLongitudeToTileId(
+				coordinate.x, coordinate.y, tileZoom);
+			var _meters = LatLonToMeters(coordinate);
+			var _rect = Conversions.TileBounds(coordinateTileId);
+
+			//vectortile space point (0 - layerExtent)
+			var vectorTilePoint = new Vector2((float)((_meters - _rect.Min).x / _rect.Size.x) * layerExtent,
+											  (float)(layerExtent - ((_meters - _rect.Max).y / _rect.Size.y) * layerExtent));
+
+			return vectorTilePoint;
+		}
+
+		public static Vector2 LatitudeLongitudeToUnityTilePosition(Vector2d coordinate, UnityTile tile, ulong layerExtent = 4096)
+		{
+			return LatitudeLongitudeToUnityTilePosition(coordinate, tile.CurrentZoom, tile.TileScale, layerExtent);
+		}
+
+		/// <summary>
+		/// Get coordinates for a given latitude/longitude in tile-space. Useful when comparing feature geometry to lat/lon coordinates.
+		/// </summary>
+		/// <returns>The longitude to tile position.</returns>
+		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="tileZoom">The zoom level of the tile.</param>
+		/// <param name="tileScale">Tile scale. Optional, but recommended. Defaults to a scale of 1.</param>
+		/// <param name="layerExtent">Layer extent. Optional, but recommended. Defaults to 4096, the standard for Mapbox Tiles</param>
+		public static Vector2 LatitudeLongitudeToUnityTilePosition(Vector2d coordinate, int tileZoom, float tileScale, ulong layerExtent = 4096)
+		{
+			var coordinateTileId = Conversions.LatitudeLongitudeToTileId(
+				coordinate.x, coordinate.y, tileZoom);
+			var _rect = Conversions.TileBounds(coordinateTileId);
+
+			//vectortile space point (0 - layerExtent)
+			var vectorTilePoint = LatitudeLongitudeToVectorTilePosition(coordinate, tileZoom, layerExtent);
+
+			//UnityTile space
+			var unityTilePoint = new Vector2((float)(vectorTilePoint.x / layerExtent * _rect.Size.x - (_rect.Size.x / 2)) * tileScale,
+			                                 (float)((layerExtent - vectorTilePoint.y) / layerExtent * _rect.Size.y - (_rect.Size.y / 2)) * tileScale);
+
+			return unityTilePoint;
 		}
 
 		/// <summary>
@@ -284,7 +336,6 @@ namespace Mapbox.Unity.Utilities
 			centerY = (1 - (centerY / tileCnt * 2)) * Constants.WebMercMax;
 			return new Vector2d(centerX, centerY);
 		}
-
 
 		/// <summary>
 		/// Gets the meters per pixels at given latitude and zoom level for a 256x256 tile.
