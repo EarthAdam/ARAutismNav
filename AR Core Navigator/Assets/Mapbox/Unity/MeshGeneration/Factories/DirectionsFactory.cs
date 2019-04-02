@@ -9,36 +9,62 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 	using Modifiers;
 	using Mapbox.Utils;
 	using Mapbox.Unity.Utilities;
-	using System.Collections;
+	using UnityEngine.UI;
 
 	public class DirectionsFactory : MonoBehaviour
 	{
+
 		[SerializeField]
+		bool debug;
+
+		[SerializeField]
+		Text Testtext;
+        int Speed = 2;
+        float changeInterval = 0.5f;
+        [SerializeField]
 		AbstractMap _map;
 
 		[SerializeField]
 		MeshModifier[] MeshModifiers;
+
+		[SerializeField]
+		Transform[] _waypoints;
+
 		[SerializeField]
 		Material _material;
 
 		[SerializeField]
-		Transform[] _waypoints;
-		private List<Vector3> _cachedWaypoints;
-
-		[SerializeField]
-		[Range(1,10)]
-		private float UpdateFrequency = 2;
-
-		
+		float _directionsLineWidth;
 
 		private Directions _directions;
 		private int _counter;
+		private bool start;
+		private bool check1;
+		private bool check2;
+		private bool check3;
+		private bool que;
+		private bool respond;
+		private bool creation;
+		private bool created;
 
 		GameObject _directionsGO;
-		private bool _recalculateNext; 
+
+		public GameObject StartPos;
+		public GameObject EndPos;
+		public Transform PlayerPos;
+
+		
+		
+		LineRenderer line;
 
 		protected virtual void Awake()
 		{
+			if(start != true && debug)
+			{
+				Testtext.text = "started";
+				start = true;
+			}
+			
 			if (_map == null)
 			{
 				_map = FindObjectOfType<AbstractMap>();
@@ -46,23 +72,6 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			_directions = MapboxAccess.Instance.Directions;
 			_map.OnInitialized += Query;
 			_map.OnUpdated += Query;
-		}
-
-		public void Start()
-		{
-			_cachedWaypoints = new List<Vector3>(_waypoints.Length);
-			foreach (var item in _waypoints)
-			{
-				_cachedWaypoints.Add(item.position);
-			}
-			_recalculateNext = false;
-
-			foreach (var modifier in MeshModifiers)
-			{
-				modifier.Initialize();
-			}
-
-			StartCoroutine(QueryTimer());
 		}
 
 		protected virtual void OnDestroy()
@@ -73,44 +82,40 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 		void Query()
 		{
+			if(que != true && debug)
+			{
+				Testtext.text = "In Query";
+				que = true;
+			}
+
 			var count = _waypoints.Length;
 			var wp = new Vector2d[count];
 			for (int i = 0; i < count; i++)
 			{
 				wp[i] = _waypoints[i].GetGeoPosition(_map.CenterMercator, _map.WorldRelativeScale);
 			}
-			var _directionResource = new DirectionResource(wp, RoutingProfile.Driving);
+			var _directionResource = new DirectionResource(wp, RoutingProfile.Walking);
 			_directionResource.Steps = true;
 			_directions.Query(_directionResource, HandleDirectionsResponse);
 		}
 
-		public IEnumerator QueryTimer()
-		{
-			while (true)
-			{
-				yield return new WaitForSeconds(UpdateFrequency);
-				for (int i = 0; i < _waypoints.Length; i++)
-				{
-					if (_waypoints[i].position != _cachedWaypoints[i])
-					{
-						_recalculateNext = true;
-						_cachedWaypoints[i] = _waypoints[i].position;
-					}
-				}
-
-				if (_recalculateNext)
-				{
-					Query();
-					_recalculateNext = false;
-				}
-			}
-		}
-
 		void HandleDirectionsResponse(DirectionsResponse response)
 		{
-			if (response == null || null == response.Routes || response.Routes.Count < 1)
+			if(respond != true && debug)
+			{
+				Testtext.text = "in Response";
+				respond = true;
+			}
+
+			if (null == response.Routes || response.Routes.Count < 1)
 			{
 				return;
+			}
+
+			if(check1 != true && debug)
+			{
+				Testtext.text = "in checkpoint 1";
+				check1 = true;
 			}
 
 			var meshData = new MeshData();
@@ -120,46 +125,108 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 				dat.Add(Conversions.GeoToWorldPosition(point.x, point.y, _map.CenterMercator, _map.WorldRelativeScale).ToVector3xz());
 			}
 
+			if(check2 != true && debug)
+			{
+				Testtext.text = "in checkpoint 2";
+				check2 = true;
+			}
+
+			
 			var feat = new VectorFeatureUnity();
 			feat.Points.Add(dat);
-
+			 
 			foreach (MeshModifier mod in MeshModifiers.Where(x => x.Active))
+			{ 
+				var lineMod = mod as LineMeshModifier;
+				if (lineMod != null)
+				{
+					//lineMod.Width = _directionsLineWidth / _map.WorldRelativeScale;
+				}
+				
+				//mod.Run(feat, meshData, _map.WorldRelativeScale);
+				
+			}
+			
+
+			if(check3 != true && debug)
 			{
-				mod.Run(feat, meshData, _map.WorldRelativeScale);
+				Testtext.text = "in checkpoint 3";
+				check3 = true;
+			}
+			
+			if(!GameObject.Find("direction waypoint entity"))
+			{
+				CreateGameObject(dat);
 			}
 
-			CreateGameObject(meshData);
+
 		}
 
-		GameObject CreateGameObject(MeshData data)
+		GameObject CreateGameObject(List<Vector3> data)
 		{
-			if (_directionsGO != null)
-			{
-				Destroy(_directionsGO);
-			}
-			_directionsGO = new GameObject("direction waypoint " + " entity");
-			var mesh = _directionsGO.AddComponent<MeshFilter>().mesh;
-			mesh.subMeshCount = data.Triangles.Count;
 
-			mesh.SetVertices(data.Vertices);
-			_counter = data.Triangles.Count;
-			for (int i = 0; i < _counter; i++)
+			if(creation != true && debug)
 			{
-				var triangle = data.Triangles[i];
-				mesh.SetTriangles(triangle, i);
+				Testtext.text = "GameObject creation call";
+				creation = true;
 			}
-
-			_counter = data.UV.Count;
-			for (int i = 0; i < _counter; i++)
+			_directionsGO = new GameObject("direction waypoint entity");
+			if(debug)
 			{
-				var uv = data.UV[i];
-				mesh.SetUVs(i, uv);
+				Testtext.text = "Obj created";
 			}
-
-			mesh.RecalculateNormals();
-			_directionsGO.AddComponent<MeshRenderer>().material = _material;
+            _directionsGO.transform.position = new Vector3(0, 5, 0);
+			//_directionsGO.transform.SetParent(GameObject.Find("Map").transform);
+            line = _directionsGO.AddComponent<LineRenderer>();
+            line.material = _material;
+            line.useWorldSpace = false;
+			Vector3[] points = data.ToArray();
+     		line.positionCount = points.Length;
+     		line.SetPositions(points);
+            //line.material=Resources.Load("Materials/chevron_line.mat", typeof(Material)) as Material;
+            //line.material.color = new Color(0,1,0);
+            //line.positionCount = data.Vertices.Count/10;
+            //line.SetPositions(data.Vertices.ToArray());
+			//_counter = data.Triangles.Count;
 			return _directionsGO;
 		}
-	}
+        void Update()
+        {
+			GameObject.Find("direction waypoint entity");
+            float index = Time.time * Speed;
+			if(GameObject.Find("GPSendpos(Clone)") & GameObject.Find("GPSstartpos(Clone)"))
+			{
+            	Vector2 textureShift = new Vector2(-index, 0);
+				if(GameObject.Find("direction waypoint entity"))
+				{
+            		var line = GameObject.Find("direction waypoint entity").GetComponent<LineRenderer>();
+            		line.material.SetTextureOffset("_MainTex", new Vector2(Time.time * .4f, 0));
+            		line.material.mainTextureOffset = textureShift;
+				}
+			}
+			if(GameObject.Find("GPSstartpos(Clone)"))
+			{
+				_waypoints[0] = GameObject.Find("GPSstartpos(Clone)").transform;
+				GameObject.Find("GPSstartpos(Clone)").transform.SetParent(GameObject.Find("Map").transform);
+			}
+			if(GameObject.Find("GPSendpos(Clone)"))
+			{
+				_waypoints[1] = GameObject.Find("GPSendpos(Clone)").transform;
+				GameObject.Find("GPSendpos(Clone)").transform.SetParent(GameObject.Find("Map").transform);
+			}
+			Query();
+        }
+
+		public void SpawnStartPos()
+		{
+			Instantiate(StartPos, PlayerPos.position, new Quaternion(0,0,0,0));
+		}
+
+		public void SpawnEndPos()
+		{
+			Instantiate(EndPos, PlayerPos.position, new Quaternion(0,0,0,0));
+		}
+    }
 
 }
+

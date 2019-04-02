@@ -145,6 +145,31 @@
      <Compile Include="Assets\GoogleARCore\SDK\Scripts\Utility\ConversionHelper.cs" />
      <Compile Include="Assets\GoogleARCore\SDK\Scripts\Utility\IntPtrEqualityComparer.cs" />
      <Compile Include="Assets\GoogleARCore\SDK\Scripts\Utility\MarshalingHelper.cs" />
+     <Compile Include="Assets\Mapbox Android\Billboard.cs" />
+     <Compile Include="Assets\Mapbox Android\CameraFollow.cs" />
+     <Compile Include="Assets\Mapbox Android\DeleteFile.cs" />
+     <Compile Include="Assets\Mapbox Android\DirectionsGeoCoder.cs" />
+     <Compile Include="Assets\Mapbox Android\DistanceCheck.cs" />
+     <Compile Include="Assets\Mapbox Android\FileToMap.cs" />
+     <Compile Include="Assets\Mapbox Android\GraphLineTextureAnimation.cs" />
+     <Compile Include="Assets\Mapbox Android\KeyboardHeight.cs" />
+     <Compile Include="Assets\Mapbox Android\LoadSavedPath.cs" />
+     <Compile Include="Assets\Mapbox Android\LookAtCamera.cs" />
+     <Compile Include="Assets\Mapbox Android\MapVisualControl.cs" />
+     <Compile Include="Assets\Mapbox Android\MapZoom.cs" />
+     <Compile Include="Assets\Mapbox Android\MinimapToggle.cs" />
+     <Compile Include="Assets\Mapbox Android\PathCheck.cs" />
+     <Compile Include="Assets\Mapbox Android\PathSave.cs" />
+     <Compile Include="Assets\Mapbox Android\PermissionManager.cs" />
+     <Compile Include="Assets\Mapbox Android\POIdisable.cs" />
+     <Compile Include="Assets\Mapbox Android\POIenable.cs" />
+     <Compile Include="Assets\Mapbox Android\Recal.cs" />
+     <Compile Include="Assets\Mapbox Android\SavePhoneNumber.cs" />
+     <Compile Include="Assets\Mapbox Android\TexShift.cs" />
+     <Compile Include="Assets\Mapbox Android\ToDebugText.cs" />
+     <Compile Include="Assets\Mapbox Android\TrackDevice.cs" />
+     <Compile Include="Assets\Mapbox Android\WarningSystem.cs" />
+     <Compile Include="Assets\Mapbox Android\WritetoFile.cs" />
      <Compile Include="Assets\Mapbox\Core\cheap-ruler-cs\CheapRuler.cs" />
      <Compile Include="Assets\Mapbox\Core\mapbox-sdk-cs\Directions\DirectionResource.cs" />
      <Compile Include="Assets\Mapbox\Core\mapbox-sdk-cs\Directions\Directions.cs" />
@@ -648,6 +673,7 @@
      <None Include="Assets\Mapbox\link.xml" />
      <None Include="Assets\Mapbox\Core\Plugins\link.xml" />
      <None Include="Assets\Resources\Mapbox\MapboxConfiguration.txt" />
+     <None Include="Assets\DirectionsLineWorking\Scenes\GridShader.shader" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>

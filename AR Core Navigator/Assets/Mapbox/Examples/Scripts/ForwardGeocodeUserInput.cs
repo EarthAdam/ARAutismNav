@@ -12,11 +12,8 @@ namespace Mapbox.Examples
 	using System;
 	using Mapbox.Geocoding;
 	using Mapbox.Utils;
-
-	[RequireComponent(typeof(InputField))]
 	public class ForwardGeocodeUserInput : MonoBehaviour
 	{
-		InputField _inputField;
 
 		ForwardGeocodeResource _resource;
 
@@ -45,12 +42,12 @@ namespace Mapbox.Examples
 
 		void Awake()
 		{
-			_inputField = GetComponent<InputField>();
-			_inputField.onEndEdit.AddListener(HandleUserInput);
+			//_inputField = GetComponent<InputField>();
+			//_inputField.onEndEdit.AddListener(HandleUserInput);
 			_resource = new ForwardGeocodeResource("");
 		}
 
-		void HandleUserInput(string searchString)
+		public void HandleUserInput(string searchString)
 		{
 			_hasResponse = false;
 			if (!string.IsNullOrEmpty(searchString))
@@ -65,7 +62,7 @@ namespace Mapbox.Examples
 			_hasResponse = true;
 			if (null == res)
 			{
-				_inputField.text = "no geocode response";
+				//_inputField.text = "no geocode response";
 			}
 			else if (null != res.Features && res.Features.Count > 0)
 			{

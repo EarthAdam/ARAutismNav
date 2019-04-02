@@ -4,54 +4,24 @@ using UnityEngine;
 
 public class ToggleLayers : MonoBehaviour {
 
-    private GameObject start;
-    private GameObject end;
-    private GameObject traffic;
-    private GameObject bike;
-    private GameObject ped;
-    private GameObject grid;
-    // Use this for initialization
+    public GameObject BusRoutes;
+
     void Start()
     {
-        start = GameObject.Find("Start");
-        start.SetActive(false);
-        end = GameObject.Find("End");
-        end.SetActive(false);
-        traffic = GameObject.Find("Mobility Map");
-        traffic.SetActive(false);
-        bike = GameObject.Find("Bicycle Map");
-        bike.SetActive(false);
-        ped = GameObject.Find("Pedestrian Map");
-        ped.SetActive(false);
-        grid = GameObject.Find("Power Map");
-        grid.SetActive(false);
+        BusRoutes = GameObject.Find("Bus Routes");        
     }
 
-    void Update()
+    public void OnclickBus()
     {
-        if (Input.GetKey(KeyCode.Alpha1))
+        BusRoutes.SetActive(!BusRoutes.activeInHierarchy);
+    }
+
+    public void OnclickBikes()
+    {
+        for(int i = 0; i < GameObject.FindGameObjectsWithTag("POImarker").Length; i++)
         {
-            start.SetActive(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha2))
-        {
-            end.SetActive(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha4))
-        {
-            traffic.SetActive(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha5))
-        {
-            bike.SetActive(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha6))
-        {
-            ped.SetActive(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha7))
-        {
-            grid.SetActive(true);
+            GameObject.FindGameObjectsWithTag("POImarker")[i].SetActive(!GameObject.FindGameObjectsWithTag("POImarker")[i].activeInHierarchy);
         }
     }
+
 }

@@ -88,6 +88,7 @@ namespace AWSSDK.Examples
             UnityInitializer.AttachToGameObject(this.gameObject);
             AWSConfigs.HttpClient = AWSConfigs.HttpClientOption.UnityWebRequest;
         }
+  
 
 
         #endregion
@@ -116,7 +117,7 @@ namespace AWSSDK.Examples
         /// <summary>
         /// Get Object from S3 Bucket
         /// </summary>
-        public void GetObjectBucket(string S3BucketName, string fileNameOnBucket, Action<GetObjectResponse, string> result)
+        public void DownloadFromBucket(string S3BucketName, string fileNameOnBucket, Action<GetObjectResponse, string> result)
         {
             
             resultTimeout = "";
@@ -155,7 +156,7 @@ namespace AWSSDK.Examples
                         int count;
                         while ((count = responseObj.Response.ResponseStream.Read(buffer, 0, buffer.Length)) != 0)
                             fs.Write(buffer, 0, count);
-                        fs.Flush();
+                        fs.Close();
                     }
                 }
                 }); 

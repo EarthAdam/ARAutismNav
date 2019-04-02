@@ -69,7 +69,7 @@ namespace AWSSDK.Examples
             }
             
 
-            S3Manager.Instance.GetObjectBucket(S3BucketName, fileNameOnBucket, (result, error) =>
+            S3Manager.Instance.DownloadFromBucket(S3BucketName, fileNameOnBucket, (result, error) =>
             {
                 if (string.IsNullOrEmpty(error))
                 {
