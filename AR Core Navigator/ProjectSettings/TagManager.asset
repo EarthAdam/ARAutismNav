@@ -6,6 +6,7 @@ TagManager:
   tags:
   - VRGazeInteractable
   - POIMarker
+  - Bus Route
   layers:
   - Default
   - TransparentFX

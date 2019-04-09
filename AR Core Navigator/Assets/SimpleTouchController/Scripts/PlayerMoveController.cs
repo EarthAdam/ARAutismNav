@@ -68,14 +68,16 @@ public class PlayerMoveController : MonoBehaviour {
 			if (names[x].Length == 33)
 			{
 			print("XBOX ONE CONTROLS ACTIVE");
-			float moveX = Input.GetAxis ("Xbox U/D J1");
-			float moveY = Input.GetAxis ("Xbox L/R J1");
+			float moveX = -Input.GetAxis ("Xbox U/D J1");
+			float moveY = -Input.GetAxis ("Xbox L/R J1");
 			float rotY = Input.GetAxis ("Xbox U/D J2");
 			float rotx = Input.GetAxis ("Xbox L/R J2");
 			float triggers = Input.GetAxis("Xbox Trigger");
 
-			Vector3 movement = new Vector3 (moveX, triggers, moveY);
-			gameObject.GetComponent<Rigidbody>().velocity = movement * 100;
+			//Vector3 movement = new Vector3 (moveX, triggers, moveY);
+			//gameObject.GetComponent<Rigidbody>().velocity = movement * 100;
+			transform.position -= transform.forward * Time.deltaTime * (moveY*10);
+			transform.position -= transform.right * Time.deltaTime * (moveX*10);
 			transform.Rotate(rotY, rotx, 0);
 			}
 		}

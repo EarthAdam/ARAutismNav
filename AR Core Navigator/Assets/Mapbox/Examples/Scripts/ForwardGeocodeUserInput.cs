@@ -18,6 +18,8 @@ namespace Mapbox.Examples
 		ForwardGeocodeResource _resource;
 
 		Vector2d _coordinate;
+
+		public string s1;
 		public Vector2d Coordinate
 		{
 			get
@@ -54,6 +56,7 @@ namespace Mapbox.Examples
 			{
 				_resource.Query = searchString;
 				MapboxAccess.Instance.Geocoder.Geocode(_resource, HandleGeocoderResponse);
+				s1 = searchString;
 			}
 		}
 

@@ -557,6 +557,7 @@
      <Compile Include="Assets\MapboxAR\Unity\Ar\SnapAlignmentStrategy.cs" />
      <Compile Include="Assets\MapboxAR\Unity\Ar\Utilities\PlotRoute.cs" />
      <Compile Include="Assets\scripts\busTrip.cs" />
+     <Compile Include="Assets\scripts\DropDown.cs" />
      <Compile Include="Assets\scripts\MovePoint.cs" />
      <Compile Include="Assets\scripts\OpenMainMenu.cs" />
      <Compile Include="Assets\scripts\ToggleLayers.cs" />

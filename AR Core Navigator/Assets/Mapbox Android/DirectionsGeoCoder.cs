@@ -10,6 +10,7 @@
 	using Mapbox.Utils.JsonConverters;
 	using Mapbox.Geocoding;
 	using Mapbox.Unity.Map;
+	using Mapbox.Unity.MeshGeneration.Factories;
 
 	/// <summary>
 	/// Fetch directions JSON once start and end locations are provided.
@@ -17,13 +18,9 @@
 	/// </summary>
 	public class DirectionsGeoCoder : MonoBehaviour
 	{
-		public GameObject DirectionsPrefabStart;
-		public GameObject DirectionsPrefabEnd;
 		public AbstractMap _map;
 		//public Text textDebug;
 		private bool Routing;
-		private Vector2d StartLoc;
-		private Vector2d EndLoc;
 
 		[SerializeField]
 		ForwardGeocodeUserInput _startLocationGeocoder;
@@ -36,6 +33,8 @@
 		Vector2d[] _coordinates;
 
 		DirectionResource _directionResource;
+
+		public DirectionsFactory DF;
 
 		void Start()
 		{
@@ -51,53 +50,7 @@
 			Routing = false;
 		}
 
-		public void ClearRoute()
-		{
-			if(ShouldRoute())
-			{
-				Routing = false;
-			}
-			Destroy(GameObject.Find("direction waypoint entity"));
-			Destroy(GameObject.Find("GPSendpos(Clone)"));
-			Destroy(GameObject.Find("GPSstartpos(Clone)"));
-		}
 
-		void Update()
-		{
-			StartLoc = _startLocationGeocoder.Coordinate;
-			EndLoc = _endLocationGeocoder.Coordinate;
-			if(ShouldRoute())
-			{
-				Routing = true;
-			}
-			if(!GameObject.Find("GPSstartpos(Clone)"))
-			{
-				if(Routing)
-				{
-					var instance = Instantiate(DirectionsPrefabStart);
-					instance.transform.localPosition = _map.GeoToWorldPosition(StartLoc, true);
-					//textDebug.text = "Spawned start";
-				}
-			}
-			if(!GameObject.Find("GPSendpos(Clone)"))
-			{
-				if(Routing)
-				{
-					var instance = Instantiate(DirectionsPrefabEnd);
-					instance.transform.localPosition = _map.GeoToWorldPosition(EndLoc, true);
-					//textDebug.text = "Spawned end";
-				}
-			}
-			if(GameObject.Find("GPSstartpos(Clone)") & GameObject.Find("GPSendpos(Clone)"))
-			{
-				Routing = false;
-			}
-			if(!GameObject.Find("GPSstartpos(Clone)") & !GameObject.Find("GPSendpos(Clone)"))
-			{
-				Destroy(GameObject.Find("direction waypoint entity"));
-			}
-
-		}
 
 		void OnDestroy()
 		{
@@ -120,7 +73,7 @@
 		void StartLocationGeocoder_OnGeocoderResponse(ForwardGeocodeResponse response)
 		{
 			_coordinates[0] = _startLocationGeocoder.Coordinate;
-			Destroy(GameObject.Find("GPSstartpos(Clone)"));
+			//print("goofy");
 		}
 
 		/// <summary>
@@ -131,7 +84,13 @@
 		void EndLocationGeocoder_OnGeocoderResponse(ForwardGeocodeResponse response)
 		{
 			_coordinates[1] = _endLocationGeocoder.Coordinate;
-			Destroy(GameObject.Find("GPSendpos(Clone)"));
+		}
+
+		public void OnClick()
+		{
+			DF.wp[0] = _startLocationGeocoder.Coordinate;
+			DF.wp[1] = _endLocationGeocoder.Coordinate;
+			DF.GameObjectname = _startLocationGeocoder.s1 + " To " + _endLocationGeocoder.s1;
 		}
 
 		/// <summary>

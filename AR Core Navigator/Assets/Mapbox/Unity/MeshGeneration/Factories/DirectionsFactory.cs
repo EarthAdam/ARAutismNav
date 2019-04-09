@@ -26,9 +26,9 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 		[SerializeField]
 		MeshModifier[] MeshModifiers;
+		public Transform[] _waypoints;
 
-		[SerializeField]
-		Transform[] _waypoints;
+		public Vector2d[] wp;
 
 		[SerializeField]
 		Material _material;
@@ -49,13 +49,12 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 		GameObject _directionsGO;
 
-		public GameObject StartPos;
-		public GameObject EndPos;
-		public Transform PlayerPos;
-
 		
 		
 		LineRenderer line;
+
+		[HideInInspector]
+		public string GameObjectname;
 
 		protected virtual void Awake()
 		{
@@ -80,20 +79,23 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			_map.OnUpdated -= Query;
 		}
 
-		void Query()
+		public void Query()
 		{
 			if(que != true && debug)
 			{
 				Testtext.text = "In Query";
 				que = true;
 			}
+			/* 
 
 			var count = _waypoints.Length;
 			var wp = new Vector2d[count];
+			
 			for (int i = 0; i < count; i++)
 			{
 				wp[i] = _waypoints[i].GetGeoPosition(_map.CenterMercator, _map.WorldRelativeScale);
 			}
+			*/
 			var _directionResource = new DirectionResource(wp, RoutingProfile.Walking);
 			_directionResource.Steps = true;
 			_directions.Query(_directionResource, HandleDirectionsResponse);
@@ -154,7 +156,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 				check3 = true;
 			}
 			
-			if(!GameObject.Find("direction waypoint entity"))
+			if(!GameObject.Find(GameObjectname))
 			{
 				CreateGameObject(dat);
 			}
@@ -170,13 +172,14 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 				Testtext.text = "GameObject creation call";
 				creation = true;
 			}
-			_directionsGO = new GameObject("direction waypoint entity");
+			_directionsGO = new GameObject(GameObjectname);
 			if(debug)
 			{
 				Testtext.text = "Obj created";
 			}
             _directionsGO.transform.position = new Vector3(0, 5, 0);
 			//_directionsGO.transform.SetParent(GameObject.Find("Map").transform);
+			_directionsGO.tag = "Bus Route";
             line = _directionsGO.AddComponent<LineRenderer>();
             line.material = _material;
             line.useWorldSpace = false;
@@ -216,16 +219,6 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			}
 			Query();
         }
-
-		public void SpawnStartPos()
-		{
-			Instantiate(StartPos, PlayerPos.position, new Quaternion(0,0,0,0));
-		}
-
-		public void SpawnEndPos()
-		{
-			Instantiate(EndPos, PlayerPos.position, new Quaternion(0,0,0,0));
-		}
     }
 
 }
