@@ -2447,12 +2447,12 @@ MonoBehaviour:
         - water_label
         - waterway
         - waterway_label
-      _sourceType: 1
+      _sourceType: 0
       sourceOptions:
         isActive: 1
         layerSource:
           Name: Mapbox Streets
-          Id: mapbox.mapbox-streets-v7
+          Id: mapbox.3d-buildings,mapbox.mapbox-streets-v7
           Modified: 
           UserName: 
       useOptimizedStyle: 0
@@ -4581,6 +4581,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1027052632}
+    - target: {fileID: 2607889390244736224, guid: 7a758c4b084f11d40a3b091fcd4f37e0,
+        type: 3}
+      propertyPath: m_Name
+      value: Bus Stops
+      objectReference: {fileID: 0}
+    - target: {fileID: 547630564404700709, guid: 7a758c4b084f11d40a3b091fcd4f37e0,
+        type: 3}
+      propertyPath: m_Text
+      value: 'Bus Stops
+
+'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a758c4b084f11d40a3b091fcd4f37e0, type: 3}
 --- !u!1 &804000197
