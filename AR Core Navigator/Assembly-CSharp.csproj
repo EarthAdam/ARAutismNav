@@ -557,8 +557,10 @@
      <Compile Include="Assets\MapboxAR\Unity\Ar\SnapAlignmentStrategy.cs" />
      <Compile Include="Assets\MapboxAR\Unity\Ar\Utilities\PlotRoute.cs" />
      <Compile Include="Assets\scripts\busTrip.cs" />
+     <Compile Include="Assets\scripts\DelayEnabled.cs" />
      <Compile Include="Assets\scripts\DropDown.cs" />
      <Compile Include="Assets\scripts\MovePoint.cs" />
+     <Compile Include="Assets\scripts\MoveWithSlider.cs" />
      <Compile Include="Assets\scripts\OpenMainMenu.cs" />
      <Compile Include="Assets\scripts\ToggleLayers.cs" />
      <Compile Include="Assets\SimpleTouchController\Scripts\InfoTouches.cs" />
@@ -651,6 +653,7 @@
      <None Include="Assets\Mapbox\Shaders\MapboxStylesPerRenderer.shader" />
      <None Include="Assets\Mapbox\Fonts\OpenSansLic.txt" />
      <None Include="Assets\MapboxAR\link.xml" />
+     <None Include="Assets\Materials\Invisible.shader" />
      <None Include="Assets\MapboxAR\Examples\ARTabletop\Shaders\ClipBox\Clip_Box.shader" />
      <None Include="Assets\Mapbox\README.txt" />
      <None Include="Assets\VRKeyboard\README.txt" />

@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd8aacc1880ff504d9531b4d61c86458, type: 3}
-  m_Name: NewPrefabModifier 1
+  m_Script: {fileID: 11500000, guid: 05ccea17608e94fb994579409c52fb80, type: 3}
+  m_Name: NewTagModifier
   m_EditorClassIdentifier: 
   Active: 1
-  _options:
-    prefab: {fileID: 1108941879288140, guid: 918e36d05ebc1dc49a1b94a868ed908c, type: 3}
-    scaleDownWithWorld: 1
+  _tag: Building
