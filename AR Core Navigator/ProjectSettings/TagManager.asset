@@ -9,6 +9,7 @@ TagManager:
   - Bus Route
   - Taxi
   - Building
+  - Map
   layers:
   - Default
   - TransparentFX

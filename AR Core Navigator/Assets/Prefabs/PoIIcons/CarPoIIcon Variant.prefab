@@ -83,17 +83,17 @@ PrefabInstance:
     - target: {fileID: 8176739107131737719, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8176739107131737719, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8176739107131737719, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2084817865570937353, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
@@ -119,17 +119,17 @@ PrefabInstance:
     - target: {fileID: 2084817865570937353, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2084817865570937353, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2084817865570937353, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4799346812701541823, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
@@ -155,17 +155,17 @@ PrefabInstance:
     - target: {fileID: 4799346812701541823, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4799346812701541823, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4799346812701541823, guid: 918e36d05ebc1dc49a1b94a868ed908c,
         type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 918e36d05ebc1dc49a1b94a868ed908c, type: 3}
