@@ -6,10 +6,13 @@ public class ColorPOI : MonoBehaviour
 {
     public Color myColor;
 
+    public Transform GGC;
+
     void Update()
     {
         foreach (Transform child in gameObject.transform)
         {
+            GGC = child;
             foreach (Transform grandchild in child.transform)
             {
                 if (null == grandchild)
@@ -38,11 +41,24 @@ public class ColorPOI : MonoBehaviour
                                 }
                                 else
                                 {
-                                    Debug.Log(thisisstupid.gameObject);
+                                    //Debug.Log(thisisstupid.gameObject);
                                     thisisstupid.gameObject.GetComponentInChildren<SpriteRenderer>().color = myColor;
+                                    GGC = thisisstupid.GetComponentInChildren<Transform>();
                                 }
                             }
                         }
+                    }
+                }
+                if (grandchild.gameObject.GetComponent<SpriteRenderer>() != null)
+                {
+                    if (grandchild.gameObject.GetComponent<SpriteRenderer>().color == myColor)
+                    {
+                        break;                              
+                    }
+                    else
+                    {
+                       // Debug.Log(grandchild.gameObject);
+                        grandchild.gameObject.GetComponent<SpriteRenderer>().color = myColor;
                     }
                 }
             }

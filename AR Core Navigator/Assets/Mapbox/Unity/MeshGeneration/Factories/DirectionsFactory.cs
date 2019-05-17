@@ -56,6 +56,8 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 		[HideInInspector]
 		public string GameObjectname;
 
+		private string LastGOname;
+
 		protected virtual void Awake()
 		{
 			if(start != true && debug)
@@ -156,7 +158,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 				check3 = true;
 			}
 			
-			if(!GameObject.Find(GameObjectname))
+			if(!GameObject.Find(GameObjectname) && GameObjectname != "")
 			{
 				CreateGameObject(dat);
 			}
@@ -166,20 +168,20 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 		GameObject CreateGameObject(List<Vector3> data)
 		{
-
 			if(creation != true && debug)
 			{
 				Testtext.text = "GameObject creation call";
 				creation = true;
 			}
 			_directionsGO = new GameObject(GameObjectname);
+			LastGOname = GameObjectname;
 			if(debug)
 			{
 				Testtext.text = "Obj created";
 			}
-            _directionsGO.transform.position = new Vector3(0, 5, 0);
+            _directionsGO.transform.position = new Vector3(0, .1f, 0);
 			//_directionsGO.transform.SetParent(GameObject.Find("Map").transform);
-			_directionsGO.tag = "Bus Route";
+			_directionsGO.tag = "Map";
             line = _directionsGO.AddComponent<LineRenderer>();
             line.material = _material;
             line.useWorldSpace = false;
@@ -195,27 +197,9 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 		}
         void Update()
         {
-			GameObject.Find("direction waypoint entity");
-            float index = Time.time * Speed;
-			if(GameObject.Find("GPSendpos(Clone)") & GameObject.Find("GPSstartpos(Clone)"))
+			if(LastGOname != GameObjectname)
 			{
-            	Vector2 textureShift = new Vector2(-index, 0);
-				if(GameObject.Find("direction waypoint entity"))
-				{
-            		var line = GameObject.Find("direction waypoint entity").GetComponent<LineRenderer>();
-            		line.material.SetTextureOffset("_MainTex", new Vector2(Time.time * .4f, 0));
-            		line.material.mainTextureOffset = textureShift;
-				}
-			}
-			if(GameObject.Find("GPSstartpos(Clone)"))
-			{
-				_waypoints[0] = GameObject.Find("GPSstartpos(Clone)").transform;
-				GameObject.Find("GPSstartpos(Clone)").transform.SetParent(GameObject.Find("Map").transform);
-			}
-			if(GameObject.Find("GPSendpos(Clone)"))
-			{
-				_waypoints[1] = GameObject.Find("GPSendpos(Clone)").transform;
-				GameObject.Find("GPSendpos(Clone)").transform.SetParent(GameObject.Find("Map").transform);
+				Destroy(GameObject.Find(LastGOname));
 			}
 			Query();
         }

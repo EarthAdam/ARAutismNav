@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mapbox.Unity.MeshGeneration.Factories;
  
 public class MoveWithSlider : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class MoveWithSlider : MonoBehaviour
     public ColorPOI Map1, Map2, Map3;
 
     private Color Save1, Save2, Save3;
+
+    public DirectionsFactory DF;
     
     void Start()
     {
@@ -44,7 +47,7 @@ public class MoveWithSlider : MonoBehaviour
     {
         for(int i = 0; i < TargetsList.Length; i++)
         {
-            if(TargetsList[i].gameObject.name == "Map")
+            if(TargetsList[i].gameObject.name == "Map" || TargetsList[i].gameObject.name == DF.GameObjectname)
             {
                 TargetsList[i].transform.position = new Vector3(TargetsList[i].transform.position.x, SliderDis.value*2, TargetsList[i].transform.position.z);
             }

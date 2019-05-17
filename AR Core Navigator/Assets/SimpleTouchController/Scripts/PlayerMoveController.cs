@@ -58,7 +58,7 @@ public class PlayerMoveController : MonoBehaviour {
 		string[] names = Input.GetJoystickNames();
 		for (int x = 0; x < names.Length; x++)
          {
-			print(names[x].Length);
+//			print(names[x].Length);
 			/*
 			if (names[x].Length == 19)
 			{
@@ -79,6 +79,16 @@ public class PlayerMoveController : MonoBehaviour {
 			transform.position -= transform.forward * Time.deltaTime * (moveY*10);
 			transform.position -= transform.right * Time.deltaTime * (moveX*10);
 			transform.Rotate(rotY, rotx, 0);
+			}
+			if(UnityEngine.XR.XRDevice.isPresent)
+			{
+				float moveX = Input.GetAxis ("MixedRealityUp");
+				float moveY = Input.GetAxis ("MixedRealityDown");
+				transform.position -= transform.forward * Time.deltaTime * (moveY*10);
+				transform.position -= transform.right * Time.deltaTime * (moveX*10);
+				Debug.Log("VR Device active");
+				Debug.Log(moveX);
+				Debug.Log(moveY);
 			}
 		}
 

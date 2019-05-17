@@ -10,6 +10,7 @@ public class DelayEnabled : MonoBehaviour
         if(gameObject.transform.childCount > 11)
         {
             otherobj.SetActive(true);
+            this.enabled = false;
         }
     }
 }
