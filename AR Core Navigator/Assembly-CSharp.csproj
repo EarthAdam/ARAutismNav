@@ -59,14 +59,6 @@
      <Compile Include="Assets\AWS Assets\Assets\Examples\HTML_Download.cs" />
      <Compile Include="Assets\AWS Assets\Assets\Examples\S3Manager.cs" />
      <Compile Include="Assets\AWS Assets\Assets\Examples\Utils.cs" />
-     <Compile Include="Assets\Drone Scene\AddPoint.cs" />
-     <Compile Include="Assets\Drone Scene\drive.cs" />
-     <Compile Include="Assets\Drone Scene\LocationGPS.cs" />
-     <Compile Include="Assets\Drone Scene\Map_Loader.cs" />
-     <Compile Include="Assets\Drone Scene\OpenAddLocationMenu.cs" />
-     <Compile Include="Assets\Drone Scene\OpenRemoveLocationMenu.cs" />
-     <Compile Include="Assets\Drone Scene\RemovePoint.cs" />
-     <Compile Include="Assets\Drone Scene\VRkeyboard.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\ComputerVision\Scripts\ComputerVisionController.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\ComputerVision\Scripts\EdgeDetector.cs" />
      <Compile Include="Assets\GoogleARCore\Examples\ComputerVision\Scripts\TextureReader.cs" />
@@ -558,15 +550,23 @@
      <Compile Include="Assets\MapboxAR\Unity\Ar\SimpleAutomaticSynchronizationContextBehaviour.cs" />
      <Compile Include="Assets\MapboxAR\Unity\Ar\SnapAlignmentStrategy.cs" />
      <Compile Include="Assets\MapboxAR\Unity\Ar\Utilities\PlotRoute.cs" />
+     <Compile Include="Assets\scripts\AddPoint.cs" />
      <Compile Include="Assets\scripts\busTrip.cs" />
      <Compile Include="Assets\scripts\ColorPOI.cs" />
      <Compile Include="Assets\scripts\DelayEnabled.cs" />
+     <Compile Include="Assets\scripts\drive.cs" />
      <Compile Include="Assets\scripts\DropDown.cs" />
+     <Compile Include="Assets\scripts\LocationGPS.cs" />
+     <Compile Include="Assets\scripts\Map_Loader.cs" />
      <Compile Include="Assets\scripts\MovePoint.cs" />
      <Compile Include="Assets\scripts\MoveWithSlider.cs" />
+     <Compile Include="Assets\scripts\OpenAddLocationMenu.cs" />
      <Compile Include="Assets\scripts\OpenMainMenu.cs" />
+     <Compile Include="Assets\scripts\OpenRemoveLocationMenu.cs" />
+     <Compile Include="Assets\scripts\RemovePoint.cs" />
      <Compile Include="Assets\scripts\Reparent.cs" />
      <Compile Include="Assets\scripts\ToggleLayers.cs" />
+     <Compile Include="Assets\scripts\VRkeyboard.cs" />
      <Compile Include="Assets\scripts\VRToggle.cs" />
      <Compile Include="Assets\SimpleTouchController\Scripts\InfoTouches.cs" />
      <Compile Include="Assets\SimpleTouchController\Scripts\PlayerMoveController.cs" />
@@ -1056,9 +1056,6 @@
  <Reference Include="UnityEditor.SpatialTracking">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
  </Reference>
- <Reference Include="Unity.XR.WindowsMR.Editor">
- <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/Unity.XR.WindowsMR.Editor.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
@@ -1067,9 +1064,6 @@
  </Reference>
  <Reference Include="UnityEditor.XR.LegacyInputHelpers">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
- </Reference>
- <Reference Include="Unity.XR.WindowsMR">
- <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/Unity.XR.WindowsMR.dll</HintPath>
  </Reference>
  <Reference Include="com.unity.multiplayer-hlapi.Runtime">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
@@ -1287,9 +1281,6 @@
  <Reference Include="Mapbox.Json">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Assets/Mapbox/Core/Plugins/ThirdParty/Mapbox.Json/Net35/Mapbox.Json.dll</HintPath>
  </Reference>
- <Reference Include="Valve.Newtonsoft.Json">
- <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Assets/SteamVR/Input/Plugins/JSON.NET/Valve.Newtonsoft.Json.dll</HintPath>
- </Reference>
  <Reference Include="Unity.Analytics.Editor">
  <HintPath>C:/Users/khols/Documents/GitHub/ARAutismNav/AR Core Navigator/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Editor.dll</HintPath>
  </Reference>
@@ -1326,28 +1317,6 @@
  <Reference Include="Boo.Lang">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.1.0f2/Editor/Data/MonoBleedingEdge/lib/mono/unity/Boo.Lang.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="SteamVR_Actions.csproj">
-      <Project>{6BE968BD-0D84-0BFC-698A-148A2309F030}</Project>
-      <Name>SteamVR_Actions</Name>
-    </ProjectReference>
-    <ProjectReference Include="SteamVR_Input_Editor.csproj">
-      <Project>{36A05987-D8F1-FFB1-8F09-9EB8510112C1}</Project>
-      <Name>SteamVR_Input_Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="SteamVR_Editor.csproj">
-      <Project>{16B2160F-22AA-3294-A03C-05F4EB94287C}</Project>
-      <Name>SteamVR_Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="SteamVR.csproj">
-      <Project>{3EE7D48D-A0B8-DC06-5EF0-ACD88FCFC51C}</Project>
-      <Name>SteamVR</Name>
-    </ProjectReference>
-    <ProjectReference Include="SteamVR_Windows_EditorHelper.csproj">
-      <Project>{36A093F2-DAFC-F230-EF43-E1B444B55433}</Project>
-      <Name>SteamVR_Windows_EditorHelper</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

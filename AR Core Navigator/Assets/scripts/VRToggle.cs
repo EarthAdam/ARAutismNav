@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 public class VRToggle : MonoBehaviour
 {
-    public GameObject VRCamera;
-
+    public GameObject UnityXR;
+    public GameObject LeftMove, RightMove;
     void Update()
     {
-        if(UnityEngine.XR.XRDevice.isPresent & !GameObject.Find("[CameraRig](Clone)") )
+        if(GameObject.Find(UnityXR.gameObject.name))
         {
-            //Debug.Log("VR Device active");
-            Instantiate(VRCamera, transform.position, transform.rotation, transform);
+            GetComponent<VRTK_UICanvas>().enabled = true;
+            LeftMove.SetActive(false);
+            RightMove.SetActive(false);
         }
         else
         {
-            //Debug.Log("VR Device Inactive");
+            GetComponent<VRTK_UICanvas>().enabled = false;
+            LeftMove.SetActive(true);
+            RightMove.SetActive(true);
         }
     }
 }

@@ -82,13 +82,14 @@ public class PlayerMoveController : MonoBehaviour {
 			}
 			if(UnityEngine.XR.XRDevice.isPresent)
 			{
-				float moveX = Input.GetAxis ("MixedRealityUp");
-				float moveY = Input.GetAxis ("MixedRealityDown");
+				float moveX = Input.GetAxis ("Vive Move X");
+				float moveY = Input.GetAxis ("Vive Move Y");
+				float rotY = Input.GetAxis ("Vive Rot X");
+				float rotx = Input.GetAxis ("Vive Rot Y");
 				transform.position -= transform.forward * Time.deltaTime * (moveY*10);
 				transform.position -= transform.right * Time.deltaTime * (moveX*10);
+				transform.Rotate(rotY, rotx, 0);
 				Debug.Log("VR Device active");
-				Debug.Log(moveX);
-				Debug.Log(moveY);
 			}
 		}
 
