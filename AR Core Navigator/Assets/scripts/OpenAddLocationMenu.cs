@@ -10,18 +10,38 @@ public class OpenAddLocationMenu : MonoBehaviour, IPointerEnterHandler
 	public GameObject Menu;
 	public GameObject LocMenu;
 
+	private float timer;
+
+	private bool timeron;
+
+
+	void Update()
+	{
+		if(timeron)
+		{
+			timer += .1f;
+		}
+		if(GameObject.Find("UnityXR") && timer >= 2)
+		{
+			Onclick();
+		}
+		
+	}
+
 	public void Onclick()
 	{
 		LocMenu.SetActive (true);
 		Menu.SetActive(false);
+		timeron = false;
+		timer = 0;
 	}
-
-     // When highlighted with mouse.
-     public void OnPointerEnter(PointerEventData eventData)
-     {
-		if(Input.GetAxis("Vive Trigger L") == 1)
-		{
-        	Onclick();
-		}
-     }
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		timeron = true;
+	}
+	public void OnPointerExit(PointerEventData eventData)
+	{
+		timeron = false;
+		timer = 0;
+	}
 }

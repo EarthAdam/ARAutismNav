@@ -25,7 +25,7 @@ namespace VRTK
     public class VRTK_UICanvas : MonoBehaviour
     {
         [Tooltip("Determines if a UI Click action should happen when a UI Pointer game object collides with this canvas.")]
-        public bool clickOnPointerCollision = false;
+        public bool clickOnPointerCollision = true;
         [Tooltip("Determines if a UI Pointer will be auto activated if a UI Pointer game object comes within the given distance of this canvas. If a value of `0` is given then no auto activation will occur.")]
         public float autoActivateWithinDistance = 0f;
 
@@ -56,7 +56,7 @@ namespace VRTK
             VRTK_UIPointer pointerCheck = collider.GetComponentInParent<VRTK_UIPointer>();
             if (pointerCheck != null && colliderCheck != null && colliderCheck.objectType == VRTK_PlayerObject.ObjectTypes.Collider)
             {
-                pointerCheck.collisionClick = clickOnPointerCollision;
+                pointerCheck.collisionClick = true;
             }
         }
 

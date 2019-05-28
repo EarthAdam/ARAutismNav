@@ -100,7 +100,7 @@ namespace VRTK
         [Tooltip("Determines whether the UI click action should be triggered when the pointer is deactivated. If the pointer is hovering over a clickable element then it will invoke the click action on that element. Note: Only works with `Click Method =  Click_On_Button_Up`")]
         public bool attemptClickOnDeactivate = false;
         [Tooltip("The amount of time the pointer can be over the same UI element before it automatically attempts to click it. 0f means no click attempt will be made.")]
-        public float clickAfterHoverDuration = 0f;
+        public float clickAfterHoverDuration = 1f;
 
         [Header("Customisation Settings")]
 
@@ -128,10 +128,10 @@ namespace VRTK
         public GameObject hoveringElement;
         [HideInInspector]
         public GameObject controllerRenderModel;
-        [HideInInspector]
+        //[HideInInspector]
         public float hoverDurationTimer = 0f;
-        [HideInInspector]
-        public bool canClickOnHover = false;
+        //[HideInInspector]
+        public bool canClickOnHover = true;
 
         /// <summary>
         /// The GameObject of the front trigger activator of the canvas currently being activated by this pointer.

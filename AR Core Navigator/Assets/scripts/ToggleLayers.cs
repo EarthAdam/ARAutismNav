@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToggleLayers : MonoBehaviour {
-
-
+public class ToggleLayers : MonoBehaviour
+{
+    
     public GameObject[] BusRoutes;
     public GameObject[] Bikes;
     
@@ -16,6 +16,10 @@ public class ToggleLayers : MonoBehaviour {
 
     bool BusClick = true;
     bool BikeClick = true;
+
+    private float timer;
+
+	private bool timeron;
     public void OnclickBus()
     {
         BusClick = !BusClick;
@@ -28,25 +32,23 @@ public class ToggleLayers : MonoBehaviour {
 
     public void OnClickMap1()
     {
-        Map.active = !Map.active;
+        Map.SetActive(!Map.activeInHierarchy);
     }
 
     public void OnClickMap2()
     {
         Map.GetComponent<DelayEnabled>().enabled = !Map.GetComponent<DelayEnabled>().enabled;
-        Map2.active = !Map2.active;
+        Map2.SetActive(!Map2.activeInHierarchy);
     }
 
     public void OnClickMap3()
     {
         Map2.GetComponent<DelayEnabled>().enabled = !Map2.GetComponent<DelayEnabled>().enabled;
-        Map3.active = !Map3.active;
+        Map3.SetActive(!Map3.activeInHierarchy);
     }
 
     void Update()
     {
-
-
         if(BusClick == false)
         {
             for(int i = 0; i < BusRoutes.Length; i++)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mapbox.Unity.MeshGeneration.Factories;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
  
 public class MoveWithSlider : MonoBehaviour
 {
@@ -17,6 +19,14 @@ public class MoveWithSlider : MonoBehaviour
     private Color Save1, Save2, Save3;
 
     public DirectionsFactory DF;
+
+    private float timer;
+
+	private bool timeron;
+
+    public bool Add;
+
+    public bool Minus;
     
     void Start()
     {
@@ -41,6 +51,32 @@ public class MoveWithSlider : MonoBehaviour
             Map2.myColor = Save2;
             Map3.myColor = Save3;
         }
+        if(Add)
+        {
+            SliderDis.value += .1f;
+        }
+        if(Minus)
+        {
+            SliderDis.value -= .1f;
+        }
+        OnChange();
+    }
+
+    public void OnClickPlus()
+    {
+        Add = true;
+        Minus = false;
+    }
+
+    public void OnClickMinus()
+    {
+        Minus = true;
+        Add = false;
+    }
+    public void OnExit()
+    {
+        Minus = false;
+        Add = false;
     }
     
     public void OnChange()
