@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class OpenAddLocationMenu : MonoBehaviour, IPointerEnterHandler
+public class OpenAddLocationMenu : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
  {
 
 	public GameObject Menu;
@@ -21,7 +21,7 @@ public class OpenAddLocationMenu : MonoBehaviour, IPointerEnterHandler
 		{
 			timer += .1f;
 		}
-		if(GameObject.Find("UnityXR") && timer >= 2)
+		if(GameObject.Find("UnityXR") && timer >= 5)
 		{
 			Onclick();
 		}

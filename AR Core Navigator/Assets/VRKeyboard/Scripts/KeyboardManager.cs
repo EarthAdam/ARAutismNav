@@ -6,9 +6,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace VRKeyboard.Utils {
-    public class KeyboardManager : MonoBehaviour {
+    public class KeyboardManager : MonoBehaviour{
         #region Public Variables
         [Header("User defined")]
         [Tooltip("If the character is uppercase at the initialization")]
@@ -23,6 +25,12 @@ namespace VRKeyboard.Utils {
         #endregion
 
         #region Private Variables
+        private float timer;
+
+	    private bool timeron;
+
+
+        private GameObject key;
         private string Input {
             get { return inputText.text;  }
             set { inputText.text = value;  }
@@ -36,15 +44,15 @@ namespace VRKeyboard.Utils {
         #region Monobehaviour Callbacks
         private void Awake() {
             
-            for (int i = 0; i < characters.childCount; i++) {
+            /*for (int i = 0; i < characters.childCount; i++) {
                 GameObject key = characters.GetChild(i).gameObject;
                 Text _text = key.GetComponentInChildren<Text>();
                 keysDictionary.Add(key, _text);
 
                 key.GetComponent<Button>().onClick.AddListener(() => {
                     GenerateInput(_text.text);
-                });
-            }
+                });* 
+            }*/
 
             capslockFlag = isUppercase;
             CapsLock();
@@ -52,7 +60,20 @@ namespace VRKeyboard.Utils {
         #endregion
 
         #region Public Methods
+
+        void Update()
+        {
+            if(timeron)
+            {
+                timer += .1f;
+            }
+            if(timer >= 2)
+            {
+                Input = Input.Remove(Input.Length - 1);
+            }
+        }
         public void Backspace() {
+            timeron = true;
             if (Input.Length > 0) {
                 Input = Input.Remove(Input.Length - 1);
             } else {
@@ -76,13 +97,25 @@ namespace VRKeyboard.Utils {
             }
             capslockFlag = !capslockFlag;
         }
+
+        public void GenerateInput(string s) 
+        {
+            if (Input.Length > maxInputLength) 
+            { 
+                return; 
+            }
+            Input += s;
+        }
+
+        public void OnPointerExitBack()
+        {
+            timeron = false;
+            timer = 0;
+        }
         #endregion
 
         #region Private Methods
-        public void GenerateInput(string s) {
-            if (Input.Length > maxInputLength) { return; }
-            Input += s;
-        }
+
 
         private string ToLowerCase(string s) {
             return s.ToLower();

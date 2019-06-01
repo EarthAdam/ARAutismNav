@@ -10,6 +10,7 @@ TagManager:
   - Taxi
   - Building
   - Map
+  - Keyboard
   layers:
   - Default
   - TransparentFX

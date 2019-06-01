@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class VRButton : MonoBehaviour, IPointerEnterHandler
+public class VRButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	private float timer;
 
@@ -24,6 +24,8 @@ public class VRButton : MonoBehaviour, IPointerEnterHandler
 
 	public bool map3;
 
+	public GameObject XR;
+
 	void Update()
 	{
 		//Debug.Log(timer);
@@ -31,7 +33,7 @@ public class VRButton : MonoBehaviour, IPointerEnterHandler
 		{
 			timer += .1f;
 		}
-		if(GameObject.Find("UnityXR") && timer >= 2)
+		if(GameObject.Find("UnityXR") && timer >= 5)
 		{
 			Onclick();
 		}
@@ -60,7 +62,10 @@ public class VRButton : MonoBehaviour, IPointerEnterHandler
         {
             TL.OnClickMap3();
         }
-
+		if(gameObject.name == "VRToggle")
+		{
+			XR.SetActive(!XR.activeInHierarchy);
+		}
 		timeron = false;
 		timer = 0;
 	}
