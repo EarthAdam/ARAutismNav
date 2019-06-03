@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class AddPoint : MonoBehaviour {
+public class AddPoint : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler  {
 
 	public GameObject Point;
 	public GameObject PointText;
@@ -13,17 +13,24 @@ public class AddPoint : MonoBehaviour {
 
 	public Text VRtext;
 	public GameObject Player;
+	private float timer;
+	
+	private bool timeron;
 
 	void Update()
 	{
+		//Debug.Log(timer);
+		if(timeron)
+		{
+			timer += .1f;
+		}
+		if(GameObject.Find("UnityXR") && timer >= 5)
+		{
+			Onclick();
+		}
 		if(GameObject.Find("UnityXR"))
 		{
 			IP.text = VRtext.text;
-			gameObject.GetComponent<EventTrigger>().enabled = true;
-		}
-		else
-		{
-			gameObject.GetComponent<EventTrigger>().enabled = false;
 		}
 	}
 
@@ -47,5 +54,15 @@ public class AddPoint : MonoBehaviour {
 		{
 			Debug.LogError ("EMPTY NAMES ARE FORBIDDEN");
 		}
+	}
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		timeron = true;
+	}
+	public void OnPointerExit(PointerEventData eventData)
+	{
+		timeron = false;
+		timer = 0;
 	}
 }

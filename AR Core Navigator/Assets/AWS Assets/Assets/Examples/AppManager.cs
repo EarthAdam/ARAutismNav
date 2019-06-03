@@ -2,6 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+
 
 namespace AWSSDK.Examples
 {
@@ -11,7 +14,11 @@ namespace AWSSDK.Examples
         public string fileNameOnBucket;
         private string pathFileUpload;
         public Text resultTextOperation;
+
+	    public Text VRtext;
         public InputField UploadInputField;
+
+        public GameObject Delete,Upload,Get;
 
         void Start()
         {
@@ -31,7 +38,20 @@ namespace AWSSDK.Examples
 
         void Update()
         {
-            fileNameOnBucket = UploadInputField.text;    
+            fileNameOnBucket = UploadInputField.text;  
+            if(GameObject.Find("UnityXR"))
+            {
+                UploadInputField.text = VRtext.text;
+                Get.GetComponent<EventSystem>().enabled = true;
+                Upload.GetComponent<EventSystem>().enabled = true;
+                Delete.GetComponent<EventSystem>().enabled = true;
+            }
+            else
+            {
+                Get.GetComponent<EventSystem>().enabled = false;
+                Upload.GetComponent<EventSystem>().enabled = false;
+                Delete.GetComponent<EventSystem>().enabled = false;
+            }
         }
         public void ListObjectsBucket()
         {
